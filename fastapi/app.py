@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 import requests
+from fastapi.responses import JSONResponse
 import os
 
 app = FastAPI()
@@ -12,15 +13,19 @@ class GenerateRequest(BaseModel):
 
 @app.post("/generate")
 def generate(req: GenerateRequest):
-    model = "llava-llama3:8b" if req.images else "llama3"
+    try:
+        model = "llava-llama3:8b" if req.images else "llama3"
 
-    payload = {
-        "model": model,
-        "prompt": req.prompt
-    }
+        payload = {
+            "model": model,
+            "prompt": req.prompt
+        }
+        if req.images:
+            payload["images"] = req.images
 
-    if req.images:
-        payload["images"] = req.images
+        res = requests.post(f"{OLLAMA_API}/api/generate", json=payload)
+        return res.json()
 
-    res = requests.post(f"{OLLAMA_API}/api/generate", json=payload)
-    return res.json()
+    except Exception as e:
+        # 디버깅용 상세 에러 출력
+        return JSONResponse(status_code=500, content={"error": str(e)})
