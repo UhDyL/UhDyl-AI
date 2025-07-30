@@ -1,28 +1,12 @@
 version: '3.9'
 
 services:
-  ollama:
-    image: ollama/ollama
-    container_name: ollama
-    ports:
-      - '11434:11434'
-    volumes:
-      - ollama_data:/root/.ollama
-    runtime: nvidia
-    environment:
-      - NVIDIA_VISIBLE_DEVICES=all
-
   fastapi:
     build: ./fastapi
     container_name: fastapi
     ports:
       - '8000:8000'
-    depends_on:
-      - ollama
     environment:
       - OLLAMA_API=http://host.docker.internal:11434
     extra_hosts:
       - 'host.docker.internal:host-gateway'
-
-volumes:
-  ollama_data:
