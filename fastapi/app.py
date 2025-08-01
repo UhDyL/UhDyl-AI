@@ -18,7 +18,8 @@ def generate(req: GenerateRequest):
 
         payload = {
             "model": model,
-            "prompt": req.prompt
+            "prompt": req.prompt,
+            "stream" : False
         }
         if req.images:
             payload["images"] = req.images
