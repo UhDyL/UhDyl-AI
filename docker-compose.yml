@@ -5,7 +5,7 @@ services:
     build: ./fastapi
     container_name: fastapi
     ports:
-      - '8000:8000'
+      - "202.31.135.91:8000:8000" 
     environment:
       - OLLAMA_API=http://172.17.0.1:11434
     extra_hosts:
