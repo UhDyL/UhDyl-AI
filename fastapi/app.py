@@ -2,9 +2,17 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 import requests
 from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 import os
 
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+    allow_credentials=False, 
+)
 OLLAMA_API = os.getenv("OLLAMA_API", "http://localhost:11434")
 
 class GenerateRequest(BaseModel):
@@ -30,3 +38,6 @@ def generate(req: GenerateRequest):
     except Exception as e:
         # 디버깅용 상세 에러 출력
         return JSONResponse(status_code=500, content={"error": str(e)})
+    
+@app.get("/health") 
+def health(): return {"ok": True}
