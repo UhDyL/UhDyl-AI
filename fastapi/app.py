@@ -22,7 +22,7 @@ class GenerateRequest(BaseModel):
 @app.post("/generate")
 def generate(req: GenerateRequest):
     try:
-        model = "llava-llama3:8b" if req.images else "llama3"
+        model = "llava-llama3:8b" if req.images else "llama3:8b"
 
         payload = {
             "model": model,
